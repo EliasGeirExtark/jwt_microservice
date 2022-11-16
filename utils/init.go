@@ -6,6 +6,7 @@ import (
 	"github.com/prongbang/goenv"
 	"gorm.io/gorm"
 	"os"
+	"strconv"
 )
 
 var (
@@ -13,13 +14,15 @@ var (
 )
 
 type Config struct {
-	DBType    string
-	DBDSN     string
-	SQLDB     *gorm.DB
-	PORT      string
-	MODE      string
-	USERID    string
-	VALIDATOR *validator.Validate
+	DBType          string
+	DBDSN           string
+	SQLDB           *gorm.DB
+	PORT            string
+	MODE            string
+	USERID          string
+	VALIDATOR       *validator.Validate
+	TOKENEXPIRETIME int
+	SECRET          string
 }
 
 func InitSettings() error {
@@ -35,6 +38,11 @@ func InitSettings() error {
 	//Initialize DB type, it could be postgres or mongodb
 	Cfg.DBType = os.Getenv("DB_TYPE")
 	Cfg.USERID = os.Getenv("USER_ID")
+	Cfg.SECRET = os.Getenv("SECRET")
+	Cfg.TOKENEXPIRETIME, err = strconv.Atoi(os.Getenv("TOKEN_EXPIRE_TIME"))
+	if err != nil {
+		return err
+	}
 
 	if Cfg.USERID == "" {
 		return errors.New("please define inside the .env which is the USER_ID field")

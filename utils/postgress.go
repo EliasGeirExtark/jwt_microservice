@@ -15,6 +15,7 @@ func initDB() (*gorm.DB, error) {
 
 	if err = db.AutoMigrate(
 		&models.Account{},
+		&models.RefreshToken{},
 	); err != nil {
 		return nil, err
 	}
