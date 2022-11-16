@@ -3,15 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/extark/jwt_microservice/controller"
+	"github.com/extark/jwt_microservice/utils"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
 
-var config Config
-
 func main() {
-	err := initSettings()
+	err := utils.InitSettings()
 	if err != nil {
 		log.Panicln(err.Error())
 		return
@@ -24,5 +23,5 @@ func main() {
 	router.HandleFunc("/refresh", nil).Methods("POST")
 
 	fmt.Println("Server started...")
-	log.Panicln(http.ListenAndServe(config.PORT, router))
+	log.Panicln(http.ListenAndServe(utils.Cfg.PORT, router))
 }

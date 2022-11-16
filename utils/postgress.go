@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"github.com/extark/jwt_microservice/models"
@@ -7,7 +7,7 @@ import (
 )
 
 func initDB() (*gorm.DB, error) {
-	db, err := gorm.Open(postgres.Open(config.DBDSN), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(Cfg.DBDSN), &gorm.Config{})
 
 	if err != nil {
 		return nil, err

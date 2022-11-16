@@ -1,6 +1,6 @@
 package models
 
-type LoginInputEmail struct {
+type LoginInput struct {
 	User     string `json:"user" validator:"required"`
 	Password string `json:"password" validator:"required"`
 }
