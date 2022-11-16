@@ -30,7 +30,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//If the credentials are correct get the user from the database
-	account, err := models.CheckLogin(utils.Cfg.USERID, loginInput.User, loginInput.Password)
+	account, err := models.CheckLogin(utils.Cfg.USERID, loginInput.User, loginInput.Password, utils.Cfg.SQLDB)
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(models.StandardError{Error: err.Error()})
@@ -49,7 +49,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	refresh.ExpireAt = time.Now().Add(time.Hour * 24 * 30)
 
 	// creates a refresh token instance inside the database
-	if err = refresh.CreateRefresh(); err != nil {
+	if err = refresh.CreateRefresh(utils.Cfg.SQLDB); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.StandardError{Error: "impossible to create refresh token instance inside the database"})
 		return

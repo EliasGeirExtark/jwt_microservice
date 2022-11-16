@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/extark/jwt_microservice/utils"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -12,25 +12,25 @@ type RefreshToken struct {
 }
 
 // CreateRefresh generate or update the refresh token inside the database
-func (r *RefreshToken) CreateRefresh() error {
+func (r *RefreshToken) CreateRefresh(db *gorm.DB) error {
 	var refresh RefreshToken
-	if utils.Cfg.SQLDB.Model(&RefreshToken{}).Where("refresh_token = ?", r.RefreshToken).First(&refresh); refresh.RefreshToken == "" {
+	if db.Model(&RefreshToken{}).Where("refresh_token = ?", r.RefreshToken).First(&refresh); refresh.RefreshToken == "" {
 		refresh.ExpireAt = r.ExpireAt
 		refresh.RefreshToken = r.RefreshToken
 		refresh.AccessToken = r.AccessToken
-		err := utils.Cfg.SQLDB.Create(&refresh).Error
+		err := db.Create(&refresh).Error
 		return err
 	} else {
 		refresh.ExpireAt = r.ExpireAt
-		err := utils.Cfg.SQLDB.Save(&refresh).Error
+		err := db.Save(&refresh).Error
 		return err
 	}
 }
 
 // IsRefreshTokenValid check if exists a refresh token inside the database and if it is not expired
-func (r *RefreshToken) IsRefreshTokenValid() (bool, error) {
+func (r *RefreshToken) IsRefreshTokenValid(db *gorm.DB) (bool, error) {
 	var refresh RefreshToken
-	if err := utils.Cfg.SQLDB.Model(&RefreshToken{}).Where("refresh_token = ?", r.RefreshToken).Find(&refresh).Error; err != nil {
+	if err := db.Model(&RefreshToken{}).Where("refresh_token = ?", r.RefreshToken).Find(&refresh).Error; err != nil {
 		return false, err
 	} else {
 		if refresh.ExpireAt.After(time.Now()) && refresh.AccessToken == r.AccessToken {
@@ -42,11 +42,11 @@ func (r *RefreshToken) IsRefreshTokenValid() (bool, error) {
 }
 
 // DeleteRefreshToken deletes the current token from the database
-func (r *RefreshToken) DeleteRefreshToken() error {
+func (r *RefreshToken) DeleteRefreshToken(db *gorm.DB) error {
 	var refresh RefreshToken
-	if err := utils.Cfg.SQLDB.Model(&RefreshToken{}).Where("refresh_token = ?", r.RefreshToken).First(&refresh).Error; err != nil {
+	if err := db.Model(&RefreshToken{}).Where("refresh_token = ?", r.RefreshToken).First(&refresh).Error; err != nil {
 		return err
 	}
 
-	return utils.Cfg.SQLDB.Where("refresh_token = ?", r.RefreshToken).Delete(&refresh).Error
+	return db.Where("refresh_token = ?", r.RefreshToken).Delete(&refresh).Error
 }

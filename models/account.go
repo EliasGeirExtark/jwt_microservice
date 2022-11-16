@@ -1,8 +1,8 @@
 package models
 
 import (
-	"github.com/extark/jwt_microservice/utils"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type Account struct {
@@ -16,10 +16,10 @@ type Account struct {
 
 // CheckLogin checks if the password sent is correct and returns a user and an eventual error
 // userTypeID a string type, it defines which is the primary key
-func CheckLogin(userTypeID string, username string, password string) (*Account, error) {
+func CheckLogin(userTypeID string, username string, password string, db *gorm.DB) (*Account, error) {
 	// Get the user by the user type id
 	var account Account
-	if err := utils.Cfg.SQLDB.Where(userTypeID+" = ?", username).Take(&account).Error; err != nil {
+	if err := db.Where(userTypeID+" = ?", username).Take(&account).Error; err != nil {
 		return nil, err
 	}
 
