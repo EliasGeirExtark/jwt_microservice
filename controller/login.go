@@ -39,7 +39,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	var refresh models.RefreshToken
 	// generate a refresh and an access token using go_jwt_auth repo
-	refresh.AccessToken, refresh.AccessToken, err = go_jwt_auth.CreateTokens(account.UUID, utils.Cfg.TOKENEXPIRETIME, utils.Cfg.SECRET)
+	refresh.AccessToken, refresh.RefreshToken, err = go_jwt_auth.CreateTokens(account.UUID, utils.Cfg.TOKENEXPIRETIME, utils.Cfg.SECRET)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(models.StandardError{Error: err.Error()})

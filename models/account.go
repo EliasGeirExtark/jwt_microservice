@@ -10,7 +10,7 @@ type Account struct {
 	Nickname   string  `gorm:"column:nickname;check:nickname is not null or email is not null or phone is not null"`
 	Email      string  `gorm:"column:email;check:nickname is not null or email is not null or phone is not null"`
 	Phone      string  `gorm:"column:phone;check:nickname is not null or email is not null or phone is not null"`
-	Password   string  `gorm:"column:password"`
+	Password   string  `gorm:"column:hashed_password"`
 	ResetToken *string `gorm:"column:reset_token;check:nickname is not null or email is not null or phone is not null"`
 }
 
