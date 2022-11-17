@@ -20,7 +20,7 @@ func main() {
 	router := mux.NewRouter().PathPrefix("/api").Subrouter()
 
 	router.HandleFunc("/login", controller.Login).Methods("POST")
-	router.HandleFunc("/refresh", nil).Methods("POST")
+	router.HandleFunc("/refresh", controller.Refresh).Methods("POST")
 
 	fmt.Println("Server started...")
 	log.Panicln(http.ListenAndServe(utils.Cfg.PORT, router))

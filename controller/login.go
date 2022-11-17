@@ -5,12 +5,14 @@ import (
 	"github.com/extark/go_jwt_auth"
 	"github.com/extark/jwt_microservice/models"
 	"github.com/extark/jwt_microservice/utils"
+	"log"
 	"net/http"
 	"time"
 )
 
 // Login this function gets a username and a password, checks this values and if are correct create a token and refresh token
 func Login(w http.ResponseWriter, r *http.Request) {
+	log.Println("GET - /login")
 	//Set headers content type
 	w.Header().Set("Content-Type", "application/json")
 
