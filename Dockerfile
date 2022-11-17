@@ -10,14 +10,16 @@ ENV GO111MODULE=on \
 # Move to working directory /build
 WORKDIR /build
 
+# Copy and download dependency using go mod
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
 # Copy the code into the container
 COPY . .
 
-# Install dependences
-RUN go get
-
 # Build the application
-RUN go build -o ./auth ./main.go
+RUN go build -o ./auth .
 
 # Move to /dist directory as the place for resulting binary folder
 WORKDIR /dist
